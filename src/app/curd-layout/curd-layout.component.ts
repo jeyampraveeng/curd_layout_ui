@@ -17,6 +17,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MasterScreen } from '../common-data/master-screen';
 import { Subscription } from 'rxjs';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-curd-layout',
@@ -89,6 +90,9 @@ export class CurdLayoutComponent implements OnInit, OnChanges {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  selection = new SelectionModel<any>(true, []);
+  @Output() selectionChange = new EventEmitter<any[]>();
+
   Math = Math;
   // Modal control
   currentItem: any = null;
@@ -149,6 +153,7 @@ export class CurdLayoutComponent implements OnInit, OnChanges {
     this.sortDir = 'asc';
     this.statusFilter = '';
     
+    this.selection = new SelectionModel<any>(true, []);
     // Load initial data
     if (this.query) {
       this.loadData();
@@ -190,19 +195,24 @@ export class CurdLayoutComponent implements OnInit, OnChanges {
     this.dataSource.sort = this.sort;
   }
 
-  /**
+ /**
    * Initialize columns from masterScreen config
    */
-  initializeColumns(): void {
-    if (this.masterScreen && this.masterScreen.columnConfig) {
+ initializeColumns(): void {
+  if (this.masterScreen && this.masterScreen.columnConfig) {
+    // Add select column if selectable is true
+    if (this.masterScreen.permission && this.masterScreen.permission.selectable) {
+      this.displayedColumns = ['select', ...this.masterScreen.columnConfig.map(col => col.columnKey)];
+    } else {
       this.displayedColumns = this.masterScreen.columnConfig.map(col => col.columnKey);
-      
-      // Add action column if needed
-      if (this.masterScreen.permission && (this.masterScreen.permission.edit || this.masterScreen.permission.delete)) {
-        this.displayedColumns.push('actions');
-      }
+    }
+    
+    // Add action column if needed
+    if (this.masterScreen.permission && (this.masterScreen.permission.edit || this.masterScreen.permission.delete)) {
+      this.displayedColumns.push('actions');
     }
   }
+}
 
   /**
    * Load data based on pagination mode
@@ -343,6 +353,39 @@ export class CurdLayoutComponent implements OnInit, OnChanges {
       
       this.updateTableData();
     }
+  }
+
+  /**
+   * handle selectable
+   */
+ /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+    } else {
+      this.dataSource.data.forEach(row => this.selection.select(row));
+    }
+    // Emit selection change event
+    this.emitSelectionChange();
+  }
+
+  /** Toggle selection for a single row */
+  toggleRowSelection(row: any) {
+    this.selection.toggle(row);
+    // Emit selection change event
+    this.emitSelectionChange();
+  }
+
+  /** Emit the current selection to parent component */
+  emitSelectionChange() {
+    this.selectionChange.emit(this.selection.selected);
   }
 
   /**
@@ -668,6 +711,7 @@ export class CurdLayoutComponent implements OnInit, OnChanges {
     }
   }
   
+  // Override when data changes
   updateTableData(): void {
     if (!this.filteredData) return;
     
@@ -682,9 +726,18 @@ export class CurdLayoutComponent implements OnInit, OnChanges {
       // Update the data source
       this.dataSource.data = paginatedData;
       
+      // Sync selection model with current page data
+      this.syncSelectionWithCurrentPage();
+      
       // Emit the data loaded event
       this.dataLoaded.emit(paginatedData);
     }
+  }
+
+  // Sync selection model with current page data to handle pagination
+  syncSelectionWithCurrentPage() {
+    // This method is needed when paginating to ensure the selection state reflects the current page
+    // For more complex implementations, you might need to track selected IDs across pages
   }
   
   /**

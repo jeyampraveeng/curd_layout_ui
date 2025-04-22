@@ -8,4 +8,6 @@ export class Permission{
     uploadFile!:boolean;
     downloadFile!:boolean;
     filterByStatus!:boolean;
+    selectable!: boolean;
+
 }

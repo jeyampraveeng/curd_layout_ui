@@ -14,6 +14,7 @@
 [view]="view.bind(this)"
 [upload]="uploadCountryData.bind(this)"
 [download]="downloadCountryData.bind(this)"
+(selectionChange)="onSelectionChange($event)"
 >
 
     <ng-template #createFormTemplate let-item>

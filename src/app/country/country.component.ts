@@ -66,6 +66,7 @@ export class CountryComponent implements OnInit {
     this.masterScreen.permission.downloadFile = true;
     this.masterScreen.permission.uploadFile = true;
     this.masterScreen.permission.filterByStatus = true;
+    this.masterScreen.permission.selectable = true;
   }
 
   ngOnInit(): void {
@@ -172,6 +173,14 @@ getAllWithPagination(params?: any): void {
     });
   }
 
+  selectedItems: any[] = [];
+  onSelectionChange(selectedItems: any[]) {
+    this.selectedItems = selectedItems;
+    console.log('Selected items:', this.selectedItems);
+    
+    // You can now use the selectedItems for bulk operations
+    // For example, enable/disable bulk action buttons based on selection
+  }
   whiteSpaceValidator(isRequired: boolean) {
     return (control: any) => {
       if (isRequired && control.value && control.value.trim() === '') {
