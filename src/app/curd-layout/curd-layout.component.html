@@ -1,0 +1,295 @@
+<!-- curd-layout.component.html -->
+<div class="w-full bg-white">
+    <div>
+        <h3 class="px-4 py-2 font-semibold theme-text">{{ masterScreen.name | titlecase }}</h3>
+        <p *ngIf="masterScreen.description">{{ masterScreen.description }}</p>
+    </div>
+    <!-- Table Section -->
+    <div class="w-full p-4">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <!-- Search and Filter Controls -->
+            <div class="flex justify-between items-center p-6 bg-white-50 border-b border-white-200">
+                <!-- Search Input -->
+                <!-- <div class="flex items-center border border-gray-300 rounded-md px-3 py-2 w-1/3">
+                    <mat-icon class="theme-text mr-2">search</mat-icon>
+                    <input class="w-full border-none outline-none" (keyup)="applyFilter($event)"
+                        placeholder="Search by anything..." #input>
+                </div> -->
+                <div class="flex items-center border border-gray-300 rounded-md px-3 py-2 w-1/3">
+                    <mat-icon class="theme-text mr-2">search</mat-icon>
+                    <input
+                      class="w-full border-none outline-none bg-transparent"
+                      [(ngModel)]="searchText"
+                      (keyup)="applyFilter($event)"
+                      placeholder="Search by anything..."
+                      #input
+                    />
+                    <!-- Fixed sizing for the clear button with reduced margin -->
+                    <button *ngIf="searchText" 
+                      (click)="clearSearch()" 
+                      mat-icon-button 
+                      class="ml-0 p-0 w-8 h-8 flex items-center justify-center">
+                      <mat-icon class="text-gray-500 hover:text-black text-lg">close</mat-icon>
+                    </button>
+                  </div>
+                  
+
+
+                  <div *ngIf="masterScreen.permission.filterByStatus">
+                    <button mat-button [matMenuTriggerFor]="statusMenu"
+                      class="border border-theme-300 rounded-md px-4 py-2 flex items-center gap-1 bg-white text-theme-700 hover:bg-theme-50 transition-colors">
+                      <span class="font-medium">
+                        {{ selectedStatusLabel }}
+                      </span>
+                      <mat-icon>arrow_drop_down</mat-icon>
+                    </button>
+                  
+                    <mat-menu #statusMenu="matMenu" class="status-filter-menu">
+                      <button mat-menu-item (click)="filterByStatus('')" class="text-gray-800">All</button>
+                      <button mat-menu-item (click)="filterByStatus('ACTIVE')" class="text-green-600">Active</button>
+                      <button mat-menu-item (click)="filterByStatus('INACTIVE')" class="text-red-600">Inactive</button>
+                    </mat-menu>
+                  </div>
+                  
+
+                <!-- Action Buttons Group -->
+                <div class="flex gap-2">
+                    <!-- Upload Button -->
+                    <input type="file" #fileInput hidden (change)="uploadFile($event)" />
+
+                    <button *ngIf="masterScreen.permission.uploadFile"
+                            class="flex items-center gap-1 border border-theme-200 rounded-md px-4 py-2 theme-text hover:bg-theme-50"
+                            (click)="fileInput.click()">
+                        <mat-icon>upload_file</mat-icon> Import
+                    </button>
+                    
+
+                    <!-- Download Button -->
+                    <button *ngIf="masterScreen.permission.downloadFile"
+                        class="flex items-center gap-1 border border-theme-200 rounded-md px-4 py-2 theme-text hover:bg-theme-50"
+                        (click)="downloadFile()">
+                        <mat-icon>download</mat-icon> Export
+                    </button>
+
+                    <!-- Add Button -->
+                    <button *ngIf="masterScreen.permission.create"
+                        class="flex items-center gap-1 border border-theme-200 rounded-md px-4 py-2 theme-text hover:bg-theme-50"
+                        (click)="openNew(modalContent)">
+                        <mat-icon>add</mat-icon> Add
+                    </button>
+                    
+                    <!-- Refresh Button -->
+                    <button
+                        class="flex items-center gap-1 border border-theme-200 rounded-md px-4 py-2 theme-text hover:bg-theme-50"
+                        (click)="onRefresh()">
+                        <mat-icon>refresh</mat-icon> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table Content -->
+            <div class="w-full overflow-x-auto">
+                <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0 w-full">
+
+                    <!-- Dynamic Columns -->
+                    <ng-container *ngFor="let column of masterScreen.columnConfig" [matColumnDef]="column.columnKey">
+                        <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="bg-white-50 text-gray-700 text-left py-3 px-4 font-bold cursor-pointer"
+                        (click)="changeSortDir(column.columnKey)"
+                      >
+                        <div class="flex items-center">
+                          {{ column.columnName }}
+                          <!-- Only show icon if column is currently sorted -->
+                          <mat-icon *ngIf="sortBy === column.columnKey" class="ml-1 text-sm">
+                            {{ sortDir === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+                          </mat-icon>
+                        </div>
+                      </th>
+
+                        <td mat-cell *matCellDef="let row" class="py-3 px-4 border-b border-gray-200">
+                            <div [ngSwitch]="column.dataType">
+                                <span *ngSwitchCase="'date'">{{ row[column.columnKey] | date }}</span>
+                                <span *ngSwitchCase="'boolean'">
+                                    <div *ngIf="row[column.columnKey]" class="text-green-500">
+                                        True
+                                    </div>
+                                    <div *ngIf="!row[column.columnKey]" class="text-red-500">
+                                        False
+                                    </div>
+                                </span>
+                                <span *ngSwitchCase="'status'">
+                                    <div *ngIf="row[column.columnKey] == 'ACTIVE'"
+                                        class="inline-block px-2 py-1 rounded-full text-xs text-white bg-green-500">
+                                        ACTIVE
+                                    </div>
+                                    <div *ngIf="row[column.columnKey] == 'INACTIVE'"
+                                        class="inline-block px-2 py-1 rounded-full text-xs text-white bg-red-500">
+                                        INACTIVE
+                                    </div>
+                                </span>
+                                <span *ngSwitchDefault>{{ row[column.columnKey] }}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- Actions Column -->
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef
+                            class="bg-white-50 text-gray-700 text-left py-3 px-4 font-bold">Actions</th>
+                        <td mat-cell *matCellDef="let row" class="py-3 px-4 border-b border-gray-200">
+                            <div class="flex gap-2">
+                                <button mat-icon-button *ngIf="masterScreen.permission.view" (click)="openView(modalContent, row)"
+                                    class="text-blue-500">
+                                    <mat-icon>visibility</mat-icon>
+                                </button>
+                                <button mat-icon-button *ngIf="masterScreen.permission.edit" (click)="openUpdate(modalContent, row)"
+                                    class="text-indigo-500">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button mat-icon-button *ngIf="masterScreen.permission.delete" (click)="openDelete(modalContent, row)"
+                                    class="text-red-500">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-50 bg-white">
+                    </tr>
+
+                </table>
+
+                <!-- Empty State Message -->
+                <div *ngIf="dataSource.data.length === 0" class="py-16 flex flex-col items-center justify-center">
+                    <mat-icon class="text-gray-300 text-6xl mb-4">list_alt</mat-icon>
+                    <p class="text-gray-500 text-lg">No items available</p>
+                </div>
+            </div>
+
+            <!-- Pagination Section -->
+            <div class="flex justify-between items-center p-4 border-t border-gray-200">
+                <div class="text-gray-500 text-sm">
+                    Page {{ currentPage }} of {{ totalPages }}
+                </div>
+
+                <div class="flex items-center">
+                    <button mat-icon-button [disabled]="currentPage === 1" (click)="goToFirstPage()"
+                        class="text-gray-700 disabled:text-gray-400">
+                        <mat-icon>first_page</mat-icon>
+                    </button>
+                    <button mat-icon-button [disabled]="currentPage === 1" (click)="goToPreviousPage()"
+                        class="text-gray-700 disabled:text-gray-400">
+                        <mat-icon>chevron_left</mat-icon>
+                    </button>
+
+                    <div class="flex items-center gap-1 mx-2">
+                        <button *ngFor="let page of visiblePageNumbers"
+                            class="w-8 h-8 border border-gray-300 rounded flex items-center justify-center cursor-pointer"
+                            [ngClass]="{'bg-theme-100 border-theme-500 theme-text': page === currentPage}"
+                            (click)="goToPage(page)">
+                            {{ page }}
+                        </button>
+                        <span *ngIf="hasMorePages" class="mx-1">...</span>
+                    </div>
+
+                    <button mat-icon-button [disabled]="currentPage === totalPages" (click)="goToNextPage()"
+                        class="text-gray-700 disabled:text-gray-400">
+                        <mat-icon>chevron_right</mat-icon>
+                    </button>
+                    <button mat-icon-button [disabled]="currentPage === totalPages" (click)="goToLastPage()"
+                        class="text-gray-700 disabled:text-gray-400">
+                        <mat-icon>last_page</mat-icon>
+                    </button>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <span class="text-gray-700">Show:</span>
+                    <mat-select [(value)]="pageSize" (selectionChange)="onPageSizeChange()"
+                        class="w-16 border border-gray-300 rounded-md px-4 py-1">
+                        <mat-option [value]="5">5</mat-option>
+                        <mat-option [value]="10">10</mat-option>
+                        <mat-option [value]="25">25</mat-option>
+                        <mat-option [value]="50">50</mat-option>
+                    </mat-select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Template -->
+<ng-template #modalContent>
+    <div class="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-3xl flex flex-col" style="max-height: 90vh;">
+        <!-- Modal Header - Fixed -->
+        <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
+            <h5 class="text-lg font-medium text-gray-800">{{ headerText }} {{ masterScreen.name }}</h5>
+            <button (click)="dialog.closeAll()" type="button"
+                class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+
+        <!-- Modal Body - Scrollable Content Area -->
+        <div class="p-6 overflow-y-auto flex-grow">
+            <!-- Create Form -->
+            <div *ngIf="headerText === 'Create' && createFormTemplate">
+                <ng-container [ngTemplateOutlet]="createFormTemplate"
+                    [ngTemplateOutletContext]="{$implicit: form}">
+                </ng-container>
+            </div>
+
+            <!-- Edit Form -->
+            <div *ngIf="headerText === 'Update' && editFormTemplate">
+                <ng-container [ngTemplateOutlet]="editFormTemplate"
+                    [ngTemplateOutletContext]="{$implicit: form}">
+                </ng-container>
+            </div>
+            
+            <!-- View Form -->
+            <div *ngIf="headerText === 'View' && createFormTemplate">
+                <ng-container [ngTemplateOutlet]="createFormTemplate"
+                    [ngTemplateOutletContext]="{$implicit: form}">
+                </ng-container>
+            </div>
+
+            <!-- Delete Confirmation -->
+            <div *ngIf="headerText === 'Delete'" class="py-4">
+                <div *ngIf="deleteConfirmTemplate">
+                    <ng-container [ngTemplateOutlet]="deleteConfirmTemplate"
+                        [ngTemplateOutletContext]="{$implicit: row}">
+                    </ng-container>
+                </div>
+                <div *ngIf="!deleteConfirmTemplate" class="text-center">
+                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                        <mat-icon class="text-red-600">warning</mat-icon>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Delete Confirmation</h3>
+                    <p class="text-sm text-gray-500 mb-4">
+                        Are you sure you want to delete this item? This action cannot be undone.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Footer - Fixed -->
+        <div class="bg-gray-50 px-6 py-3 flex justify-end space-x-2 border-t border-gray-200 flex-shrink-0">
+            <button type="button" (click)="dialog.closeAll()"
+                class="px-4 py-2 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-500">
+                Cancel
+            </button>
+
+            <button *ngIf="saveCloseBtn && headerText !== 'View' && headerText !== 'Delete' " type="button" (click)="preSave()"
+                class="px-4 py-2 bg-theme-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-theme-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-500">
+                {{ headerText }}
+            </button>
+
+            <button *ngIf="headerText === 'Delete'" type="button" (click)="preDelete()"
+                class="px-4 py-2 bg-red-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                Delete
+            </button>
+        </div>
+    </div>
+</ng-template>

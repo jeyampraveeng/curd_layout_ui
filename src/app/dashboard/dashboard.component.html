@@ -1,0 +1,87 @@
+<div class="dashboard-container h-screen flex flex-col">
+    <mat-toolbar color="warn" class="flex justify-between items-center z-10">
+      <div class="flex items-center">
+        <button mat-icon-button *ngIf="isHandset" (click)="sidenav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span class="text-xl">Admin Dashboard</span>
+      </div>
+    </mat-toolbar>
+  
+    <mat-sidenav-container class="flex-1">
+
+  
+      <mat-sidenav-content class="p-6 bg-pruple-50">
+        <div class="mb-6">
+          <h1 class="text-xl font-bold text-gray-800">Welcome to your Dashboard</h1>
+          <p class="text-gray-600">Here's what's happening today</p>
+        </div>
+  
+        <!-- Analytics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <mat-card class="p-4">
+            <div class="flex items-center">
+              <div class="rounded-full bg-blue-100 p-3 mr-4">
+                <mat-icon class="text-blue-500">people</mat-icon>
+              </div>
+              <div>
+                <p class="text-gray-600 text-sm">Total Users</p>
+                <h3 class="text-2xl font-bold">{{analytics.totalUsers}}</h3>
+              </div>
+            </div>
+          </mat-card>
+  
+          <mat-card class="p-4">
+            <div class="flex items-center">
+              <div class="rounded-full bg-green-100 p-3 mr-4">
+                <mat-icon class="text-green-500">person</mat-icon>
+              </div>
+              <div>
+                <p class="text-gray-600 text-sm">Active Users</p>
+                <h3 class="text-2xl font-bold">{{analytics.activeUsers}}</h3>
+              </div>
+            </div>
+          </mat-card>
+  
+          <mat-card class="p-4">
+            <div class="flex items-center">
+              <div class="rounded-full bg-purple-100 p-3 mr-4">
+                <mat-icon class="text-purple-500">trending_up</mat-icon>
+              </div>
+              <div>
+                <p class="text-gray-600 text-sm">Daily Visits</p>
+                <h3 class="text-2xl font-bold">{{analytics.dailyVisits}}</h3>
+              </div>
+            </div>
+          </mat-card>
+  
+          <mat-card class="p-4">
+            <div class="flex items-center">
+              <div class="rounded-full bg-yellow-100 p-3 mr-4">
+                <mat-icon class="text-yellow-500">assessment</mat-icon>
+              </div>
+              <div>
+                <p class="text-gray-600 text-sm">Conversion Rate</p>
+                <h3 class="text-2xl font-bold">{{analytics.conversionRate}}</h3>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+  
+        <!-- Recent Activities -->
+        <mat-card class="p-4">
+          <div class="mb-4">
+            <h2 class="text-xl font-semibold text-gray-800">Recent Activities</h2>
+          </div>
+          <mat-list>
+            <mat-list-item *ngFor="let activity of recentActivities" class="h-auto py-2 border-b border-gray-200">
+              <div matListItemTitle class="font-medium">{{activity.action}}</div>
+              <div matListItemLine class="text-sm text-gray-600">{{activity.user}}</div>
+              <div matListItemMeta class="text-xs text-gray-500">{{activity.time}}</div>
+            </mat-list-item>
+          </mat-list>
+        </mat-card>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </div>
+  

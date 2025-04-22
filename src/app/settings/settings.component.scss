@@ -1,0 +1,174 @@
+.settings-page {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.settings-card {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  
+  mat-card-header {
+    padding: 1.5rem;
+    background-color: var(--primary);
+    color: white;
+    
+    mat-card-title {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+  }
+  
+  mat-card-content {
+    padding: 1.5rem;
+  }
+}
+
+.settings-section {
+  margin-bottom: 1.5rem;
+  
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    color: var(--primary);
+  }
+  
+  &.actions-section {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+  }
+}
+
+.theme-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.theme-swatch {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  &.selected {
+    box-shadow: 0 0 0 3px white, 0 0 0 6px var(--primary);
+  }
+  
+  .check-icon {
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+  
+  .theme-name {
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-align: center;
+  }
+  
+  &.add-theme {
+    background-color: #f5f5f5;
+    border: 2px dashed #bdbdbd;
+    color: #757575;
+    
+    &:hover {
+      background-color: #eeeeee;
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+  }
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+}
+
+.setting-label {
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.setting-control {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  
+  input[type="range"] {
+    width: 150px;
+    accent-color: var(--primary);
+  }
+}
+
+.language-select {
+  width: 150px;
+  margin: -1rem 0;
+}
+
+mat-divider {
+  margin: 1.5rem 0;
+}
+
+// Dark Mode Styles
+:host-context(body.dark-mode) {
+  .settings-card {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+    
+    h3 {
+      color: var(--primary-light);
+    }
+  }
+  
+  .theme-swatch {
+    &.add-theme {
+      background-color: #3d3d3d;
+      border-color: #5d5d5d;
+      color: #e0e0e0;
+      
+      &:hover {
+        background-color: #4d4d4d;
+        border-color: var(--primary-light);
+        color: var(--primary-light);
+      }
+    }
+  }
+  
+  .setting-label {
+    color: #e0e0e0;
+  }
+}
+
+// Compact View Styles
+:host-context(body.compact-view) {
+  .theme-swatch {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .settings-card mat-card-content {
+    padding: 1rem;
+  }
+  
+  .setting-row {
+    padding: 0.5rem 0;
+  }
+}

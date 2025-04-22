@@ -1,1 +1,993 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+// Theme color palette (default: purple)
+$theme-color: (
+  50: #f5f3ff,
+  100: #ede9fe,
+  200: #ddd6fe,
+  300: #c4b5fd,
+  400: #a78bfa,
+  500: #8b5cf6,
+  600: #7c3aed,
+  700: #6d28d9,
+  800: #5b21b6,
+  900: #4c1d95,
+  950: #3b0764,
+);
+
+// To change to red theme, use these values instead:
+// $theme-color: (
+//   50: #fef2f2,
+//   100: #fee2e2,
+//   200: #fecaca,
+//   300: #fca5a5,
+//   400: #f87171,
+//   500: #ef4444,
+//   600: #dc2626,
+//   700: #b91c1c,
+//   800: #991b1b,
+//   900: #7f1d1d,
+//   950: #450a0a,
+// );
+
+// To change to blue theme, use these values instead:
+// $theme-color: (
+//   50: #eff6ff,
+//   100: #dbeafe,
+//   200: #bfdbfe,
+//   300: #93c5fd,
+//   400: #60a5fa,
+//   500: #3b82f6,
+//   600: #2563eb,
+//   700: #1d4ed8,
+//   800: #1e40af,
+//   900: #1e3a8a,
+//   950: #172554,
+// );
+
+// Main theme colors mapped from color palette
+$primary: map-get($theme-color, 700);
+$primary-light: map-get($theme-color, 400);
+$primary-dark: map-get($theme-color, 900);
+$accent: map-get($theme-color, 300);
+$warn: #ef4444;
+
+// Generate CSS variables from theme colors
+:root {
+  --theme-50: #{map-get($theme-color, 50)};
+  --theme-100: #{map-get($theme-color, 100)};
+  --theme-200: #{map-get($theme-color, 200)};
+  --theme-300: #{map-get($theme-color, 300)};
+  --theme-400: #{map-get($theme-color, 400)};
+  --theme-500: #{map-get($theme-color, 500)};
+  --theme-600: #{map-get($theme-color, 600)};
+  --theme-700: #{map-get($theme-color, 700)};
+  --theme-800: #{map-get($theme-color, 800)};
+  --theme-900: #{map-get($theme-color, 900)};
+  --theme-950: #{map-get($theme-color, 950)};
+  
+  --primary: #{$primary};
+  --primary-light: #{$primary-light};
+  --primary-dark: #{$primary-dark};
+  --accent: #{$accent};
+  --warn: #{$warn};
+
+  // Common text and background colors
+  --text-dark: #1f2937;
+  --text-light: #f9fafb;
+  --bg-light: #ffffff;
+  --bg-dark: #111827;
+  --border-color: #e5e7eb;
+  --disabled-bg: #e5e7eb;
+  --disabled-text: #9ca3af;
+  
+  // Form specific variables
+  --input-bg: #ffffff;
+  --input-border: #d1d5db;
+  --input-focus-border: var(--theme-500);
+  --input-focus-shadow: rgba(139, 92, 246, 0.2);
+  --label-text: #4b5563;
+  --placeholder-text: #9ca3af;
+}
+
+/* ====================== THEME UTILITY CLASSES ====================== */
+// Text color utilities
+.theme-text {
+  color: var(--primary);
+}
+
+.text-theme-400 {
+  color: var(--theme-400);
+}
+
+.text-theme-500 {
+  color: var(--theme-500);
+}
+
+.text-theme-600 {
+  color: var(--theme-600);
+}
+
+// Background color utilities
+.theme-bg {
+  background-color: var(--primary);
+}
+
+.bg-theme-50 {
+  background-color: var(--theme-50);
+}
+
+.bg-theme-100 {
+  background-color: var(--theme-100);
+}
+
+.bg-theme-200 {
+  background-color: var(--theme-200);
+}
+
+.bg-theme-600 {
+  background-color: var(--theme-600);
+}
+
+.bg-theme-700 {
+  background-color: var(--theme-700);
+}
+
+.bg-theme-800 {
+  background-color: var(--theme-800);
+}
+
+// Border and accent utilities
+.accent-theme-600 {
+  accent-color: var(--theme-600);
+}
+
+.border-theme-400 {
+  border-color: var(--theme-400);
+}
+
+// Hover states
+.hover\:bg-theme-600:hover {
+  background-color: var(--theme-600);
+}
+
+.hover\:bg-theme-700:hover {
+  background-color: var(--theme-700);
+}
+
+.hover\:text-theme-500:hover {
+  color: var(--theme-500);
+}
+
+.hover\:border-theme-500:hover {
+  border-color: var(--theme-500);
+}
+
+/* ====================== BUTTON COMPONENT ====================== */
+.theme-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  transition: all 150ms ease-in-out;
+  cursor: pointer;
+  
+  // Default primary button
+  &.primary {
+    background-color: var(--primary);
+    color: var(--text-light);
+    
+    &:hover, &:focus {
+      background-color: var(--primary-dark);
+    }
+    
+    &:active {
+      transform: scale(0.98);
+    }
+    
+    &:disabled {
+      background-color: var(--disabled-bg);
+      color: var(--disabled-text);
+      cursor: not-allowed;
+    }
+  }
+  
+  // Secondary/outlined button
+  &.secondary {
+    background-color: transparent;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    
+    &:hover, &:focus {
+      background-color: var(--theme-50);
+      border-color: var(--primary-dark);
+    }
+    
+    &:active {
+      transform: scale(0.98);
+    }
+    
+    &:disabled {
+      border-color: var(--disabled-bg);
+      color: var(--disabled-text);
+      cursor: not-allowed;
+    }
+  }
+  
+  // Text button
+  &.text {
+    background-color: transparent;
+    color: var(--primary);
+    
+    &:hover, &:focus {
+      background-color: var(--theme-50);
+    }
+    
+    &:active {
+      transform: scale(0.98);
+    }
+    
+    &:disabled {
+      color: var(--disabled-text);
+      cursor: not-allowed;
+    }
+  }
+  
+  // Button sizes
+  &.small {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  &.large {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.125rem;
+  }
+  
+  // Button with icon
+  .icon {
+    margin-right: 0.5rem;
+  }
+  
+  &.icon-only {
+    padding: 0.5rem;
+    
+    &.small {
+      padding: 0.25rem;
+    }
+    
+    &.large {
+      padding: 0.75rem;
+    }
+  }
+
+  // Warning/danger button
+  &.warn {
+    background-color: var(--warn);
+    color: var(--text-light);
+    
+    &:hover, &:focus {
+      background-color: #dc2626;
+    }
+    
+    &:disabled {
+      background-color: var(--disabled-bg);
+      color: var(--disabled-text);
+    }
+  }
+}
+
+/* ====================== FORM COMPONENTS ====================== */
+.theme-form {
+  // Form group
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  // Labels
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--label-text);
+  }
+  
+  // Basic input styling
+  .form-control {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--text-dark);
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 0.375rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    
+    &:focus {
+      border-color: var(--input-focus-border);
+      outline: 0;
+      box-shadow: 0 0 0 3px var(--input-focus-shadow);
+    }
+    
+    &::placeholder {
+      color: var(--placeholder-text);
+    }
+    
+    &:disabled {
+      background-color: var(--disabled-bg);
+      cursor: not-allowed;
+    }
+    
+    &.is-invalid {
+      border-color: var(--warn);
+    }
+  }
+  
+  // Select styling
+  select.form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+    padding-right: 2.5rem;
+  }
+  
+  // Checkbox and radio
+  .checkbox-group, .radio-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    
+    input[type="checkbox"], input[type="radio"] {
+      accent-color: var(--primary);
+      margin-right: 0.5rem;
+    }
+  }
+  
+  // Form validation text
+  .form-text {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    
+    &.text-muted {
+      color: var(--label-text);
+    }
+    
+    &.text-error {
+      color: var(--warn);
+    }
+  }
+  
+  // Input with icon
+  .input-with-icon {
+    position: relative;
+    
+    .icon {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--placeholder-text);
+      
+      &.icon-left {
+        left: 0.75rem;
+        & + input {
+          padding-left: 2.5rem;
+        }
+      }
+      
+      &.icon-right {
+        right: 0.75rem;
+        & + input {
+          padding-right: 2.5rem;
+        }
+      }
+    }
+  }
+}
+
+/* ====================== ANGULAR MATERIAL THEME OVERRIDES ====================== */
+.mat-toolbar.mat-primary {
+  background-color: var(--primary);
+}
+
+.mat-fab.mat-primary, .mat-mini-fab.mat-primary, .mat-raised-button.mat-primary {
+  background-color: var(--primary);
+}
+
+.mat-button.mat-primary, .mat-icon-button.mat-primary, .mat-stroked-button.mat-primary {
+  color: var(--primary);
+}
+
+.mat-checkbox-checked.mat-primary .mat-checkbox-background {
+  background-color: var(--primary);
+}
+
+// Active link in sidebar
+.active-link {
+  background-color: var(--theme-600);
+}
+
+
+
+/* ====================== COMMON CARD COMPONENT ====================== */
+.theme-card {
+  background-color: var(--bg-light);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  
+  .card-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--theme-50);
+    
+    h2, h3, h4 {
+      margin: 0;
+      color: var(--text-dark);
+    }
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .card-footer {
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--theme-50);
+  }
+}
+
+/* ====================== TABLE STYLING ====================== */
+.theme-table {
+  width: 100%;
+  border-collapse: collapse;
+  
+  th, td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+  }
+  
+  thead {
+    background-color: var(--theme-50);
+    
+    th {
+      font-weight: 600;
+      color: var(--text-dark);
+      border-bottom: 2px solid var(--theme-200);
+    }
+  }
+  
+  tbody {
+    tr {
+      border-bottom: 1px solid var(--border-color);
+      
+      &:hover {
+        background-color: var(--theme-50);
+      }
+    }
+    
+    td {
+      color: var(--text-dark);
+    }
+  }
+  
+  // Striped tables
+  &.striped {
+    tbody tr:nth-child(odd) {
+      background-color: var(--theme-50);
+      
+      &:hover {
+        background-color: var(--theme-100);
+      }
+    }
+  }
+}
+
+/* ====================== MODAL/DIALOG STYLING ====================== */
+.theme-modal {
+  background-color: var(--bg-light);
+  border-radius: 0.5rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    
+    h3 {
+      margin: 0;
+      color: var(--text-dark);
+    }
+    
+    .close-button {
+      background: transparent;
+      border: none;
+      color: var(--text-dark);
+      cursor: pointer;
+      padding: 0.25rem;
+      
+      &:hover {
+        color: var(--primary);
+      }
+    }
+  }
+  
+  .modal-body {
+    padding: 1rem;
+  }
+  
+  .modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
+  }
+}
+
+/* ====================== NAVIGATION COMPONENT ====================== */
+.theme-nav {
+  background-color: var(--primary);
+  color: var(--text-light);
+  
+  .nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+  }
+  
+  .nav-brand {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-light);
+    text-decoration: none;
+  }
+  
+  .nav-links {
+    display: flex;
+    gap: 1rem;
+    
+    a {
+      color: var(--theme-100);
+      text-decoration: none;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      transition: all 150ms ease;
+      
+      &:hover, &:focus {
+        color: var(--text-light);
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      
+      &.active {
+        color: var(--text-light);
+        background-color: var(--theme-600);
+      }
+    }
+  }
+}
+
+/* ====================== BADGES ====================== */
+.theme-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+  border-radius: 9999px;
+  
+  &.primary {
+    background-color: var(--theme-100);
+    color: var(--theme-800);
+  }
+  
+  &.success {
+    background-color: #d1fae5;
+    color: #065f46;
+  }
+  
+  &.warning {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+  
+  &.danger {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+  
+  &.info {
+    background-color: #dbeafe;
+    color: #1e40af;
+  }
+}
+
+/* ====================== ALERTS ====================== */
+.theme-alert {
+  border-radius: 0.375rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid transparent;
+  
+  .alert-title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  
+  &.primary {
+    background-color: var(--theme-50);
+    border-color: var(--primary);
+    
+    .alert-title {
+      color: var(--theme-800);
+    }
+  }
+  
+  &.success {
+    background-color: #ecfdf5;
+    border-color: #10b981;
+    
+    .alert-title {
+      color: #065f46;
+    }
+  }
+  
+  &.warning {
+    background-color: #fffbeb;
+    border-color: #f59e0b;
+    
+    .alert-title {
+      color: #92400e;
+    }
+  }
+  
+  &.danger {
+    background-color: #fef2f2;
+    border-color: var(--warn);
+    
+    .alert-title {
+      color: #991b1b;
+    }
+  }
+  
+  &.info {
+    background-color: #eff6ff;
+    border-color: #3b82f6;
+    
+    .alert-title {
+      color: #1e40af;
+    }
+  }
+}
+
+/* ====================== UTILITY CLASSES ====================== */
+// Spacing utilities
+.theme-m-1 { margin: 0.25rem; }
+.theme-m-2 { margin: 0.5rem; }
+.theme-m-3 { margin: 0.75rem; }
+.theme-m-4 { margin: 1rem; }
+
+.theme-mt-1 { margin-top: 0.25rem; }
+.theme-mt-2 { margin-top: 0.5rem; }
+.theme-mt-3 { margin-top: 0.75rem; }
+.theme-mt-4 { margin-top: 1rem; }
+
+.theme-p-1 { padding: 0.25rem; }
+.theme-p-2 { padding: 0.5rem; }
+.theme-p-3 { padding: 0.75rem; }
+.theme-p-4 { padding: 1rem; }
+
+// Flexbox utilities
+.theme-flex { display: flex; }
+.theme-flex-col { flex-direction: column; }
+.theme-items-center { align-items: center; }
+.theme-justify-between { justify-content: space-between; }
+.theme-gap-2 { gap: 0.5rem; }
+.theme-gap-4 { gap: 1rem; }
+
+// Custom shadows
+.theme-shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+.theme-shadow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); }
+.theme-shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+.theme-shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+
+
+
+
+/* Add these to your theme-variables.scss file or component styles */
+
+/* Border color utilities */
+.border-theme-100 {
+  border-color: var(--theme-100);
+}
+
+.border-theme-200 {
+  border-color: var(--theme-200);
+}
+
+.border-theme-300 {
+  border-color: var(--theme-300);
+}
+
+.border-theme-400 {
+  border-color: var(--theme-400);
+}
+
+/* Explicit hover states */
+.hover\:bg-theme-50:hover {
+  background-color: var(--theme-50) !important;
+}
+
+.hover\:bg-theme-100:hover {
+  background-color: var(--theme-100) !important;
+}
+
+.hover\:bg-theme-600:hover {
+  background-color: var(--theme-600) !important;
+}
+
+.hover\:bg-theme-700:hover {
+  background-color: var(--theme-700) !important;
+}
+
+.hover\:text-theme-600:hover {
+  color: var(--theme-600) !important;
+}
+
+.hover\:text-red-600:hover {
+  color: #dc2626 !important;
+}
+
+/* Fix for action buttons */
+.table-row-actions {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+tr:hover .table-row-actions {
+  opacity: 1;
+}
+
+/* Add background for bg-theme-600 */
+.bg-theme-600 {
+  background-color: var(--theme-600);
+  color: white;
+}
+
+/* Fix for theme-button */
+.theme-button {
+  background-color: var(--theme-600);
+  color: white;
+}
+
+.theme-button:hover {
+  background-color: var(--theme-700);
+}
+
+/* Correctly handle focus states */
+.focus\:ring-theme-500:focus {
+  --tw-ring-color: var(--theme-500);
+  --tw-ring-opacity: 0.5;
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+
+/* Transition effects for smoother interactions */
+.transition-colors {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+
+/* Add these classes to your theme-variables.scss file */
+
+/* Gradient backgrounds that use theme colors */
+.bg-gradient.theme-gradient {
+  background-image: linear-gradient(to bottom right, var(--theme-500), var(--theme-700));
+}
+
+/* Used for the decorative circles */
+.theme-circle-light {
+  background-color: var(--theme-400);
+}
+
+/* Alternative gradients based on theme - can be selected via class changes */
+.bg-gradient.theme-gradient-light {
+  background-image: linear-gradient(to bottom right, var(--theme-400), var(--theme-600));
+}
+
+.bg-gradient.theme-gradient-dark {
+  background-image: linear-gradient(to bottom right, var(--theme-600), var(--theme-900));
+}
+
+/* Responsive utilities for the split layout */
+@media (max-width: 768px) {
+  .split-layout-mobile-bg {
+    background-color: var(--theme-50);
+  }
+}
+
+/* You could also create different layout versions with different color schemes */
+.split-layout-alt .theme-text {
+  color: var(--theme-800);
+}
+
+.split-layout-alt .bg-gradient.theme-gradient {
+  background-image: linear-gradient(to bottom right, var(--theme-600), var(--theme-800));
+}
+
+
+
+
+//dark theme
+
+/* dark-mode.scss - Import this in your main styles.scss file */
+
+body.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+  
+  // Angular Material Dark Theme Overrides
+  .mat-mdc-card {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+  }
+  
+  .mat-mdc-form-field {
+    .mat-mdc-text-field-wrapper {
+      background-color: #3d3d3d;
+    }
+    
+    .mat-mdc-form-field-label {
+      color: #b0b0b0;
+    }
+    
+    .mat-mdc-input-element {
+      color: #e0e0e0;
+    }
+  }
+  
+  .mat-mdc-button {
+    color: #e0e0e0;
+  }
+  
+  .mat-mdc-raised-button.mat-primary {
+    background-color: var(--primary);
+  }
+  
+  .mat-mdc-slide-toggle {
+    .mat-mdc-slide-toggle-label {
+      color: #e0e0e0;
+    }
+  }
+  
+  // Custom App-specific Dark Mode Styles
+  .app-header {
+    background-color: #1f1f1f;
+    color: #ffffff;
+  }
+  
+  .app-sidebar {
+    background-color: #1f1f1f;
+    color: #e0e0e0;
+  }
+  
+  .app-footer {
+    background-color: #1f1f1f;
+    color: #b0b0b0;
+  }
+  
+  // Dark mode for specific components
+  .dashboard-card {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+  }
+  
+  .data-table {
+    background-color: #2d2d2d;
+    
+    .table-header {
+      background-color: #3d3d3d;
+    }
+    
+    .table-row:nth-child(even) {
+      background-color: #333333;
+    }
+    
+    .table-row:hover {
+      background-color: #4d4d4d;
+    }
+  }
+  
+  // Adjust text colors for better readability
+  h1, h2, h3, h4, h5, h6 {
+    color: #ffffff;
+  }
+  
+  a {
+    color: var(--primary-light);
+    
+    &:hover {
+      color: var(--accent);
+    }
+  }
+  
+  // Form elements
+  input, select, textarea {
+    background-color: #3d3d3d;
+    color: #e0e0e0;
+    border-color: #5d5d5d;
+    
+    &:focus {
+      border-color: var(--primary-light);
+    }
+  }
+  
+  // Buttons
+  button {
+    &.secondary-button {
+      background-color: #3d3d3d;
+      color: #e0e0e0;
+      
+      &:hover {
+        background-color: #4d4d4d;
+      }
+    }
+  }
+}
+
+
+
+/* Toast container overrides */
+.toast-container {
+  position: fixed !important;
+  right: 12px !important;
+  top: 12px !important;
+  width: auto !important;
+}
+
+.toast-container .ngx-toastr {
+  width: auto !important;
+  max-width: 100% !important;
+  background: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin-bottom: 8px !important;
+  overflow: hidden !important;
+}
+
+/* Toast type colors */
+.toast-success-override {
+  background-color: #48bb78 !important; /* green-500 */
+  color: white !important;
+}
+
+.toast-error-override {
+  background-color: #f56565 !important; /* red-500 */
+  color: white !important;
+}
+
+.toast-warning-override {
+  background-color: #ecc94b !important; /* yellow-500 */
+  color: white !important;
+}
+
+.toast-info-override {
+  background-color: #4299e1 !important; /* blue-500 */
+  color: white !important;
+}

@@ -1,0 +1,19 @@
+<div class="flex items-center rounded-md shadow-md overflow-hidden"
+     [ngClass]="{
+       'toast-success-override w-64': toastPackage.toastType === 'toast-success',
+       'toast-error-override w-80': toastPackage.toastType === 'toast-error',
+       'toast-warning-override w-72': toastPackage.toastType === 'toast-warning',
+       'toast-info-override w-72': toastPackage.toastType === 'toast-info'
+     }">
+  <div class="w-full px-3 py-2">
+    <div class="flex justify-between items-center">
+      <div class="font-medium text-sm">{{ title }}</div>
+      <button *ngIf="options.closeButton"
+              (click)="remove()"
+              class="text-white hover:text-gray-200">
+        <span class="text-lg">&times;</span>
+      </button>
+    </div>
+    <div class="text-xs mt-1">{{ message }}</div>
+  </div>
+</div>

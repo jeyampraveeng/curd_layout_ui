@@ -1,0 +1,93 @@
+<app-auth-layout title="Join Us Today!" description="Create an account and start your journey with our powerful tools and services.">
+  <div leftContent>
+    <h3 class="text-2xl font-bold theme-text mb-1">Create Account</h3>
+    <p class="text-theme-600 mb-8">Sign up to get started</p>
+    
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Full Name input -->
+      <div class="relative">
+        <div class="flex items-center bg-gray-100 rounded-lg px-3">
+          <mat-icon class="theme-text">person</mat-icon>
+          <input
+            formControlName="fullName"
+            type="text"
+            class="w-full py-3 px-3 bg-gray-100 border-none focus:outline-none"
+            placeholder="Full Name"
+          >
+        </div>
+      </div>
+      
+      <!-- Email input -->
+      <div class="relative">
+        <div class="flex items-center bg-gray-100 rounded-lg px-3">
+          <mat-icon class="theme-text">email</mat-icon>
+          <input
+            formControlName="email"
+            type="email"
+            class="w-full py-3 px-3 bg-gray-100 border-none focus:outline-none"
+            placeholder="E-mail"
+          >
+        </div>
+      </div>
+      
+      <!-- Password input -->
+      <div class="relative">
+        <div class="flex items-center bg-gray-100 rounded-lg px-3">
+          <mat-icon class="theme-text">lock</mat-icon>
+          <input
+            formControlName="password"
+            [type]="hidePassword ? 'password' : 'text'"
+            class="w-full py-3 px-3 bg-gray-100 border-none focus:outline-none"
+            placeholder="Password"
+          >
+          <button
+            type="button"
+            (click)="hidePassword = !hidePassword"
+            class="text-gray-400 focus:outline-none"
+          >
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Confirm Password input -->
+      <div class="relative">
+        <div class="flex items-center bg-gray-100 rounded-lg px-3">
+          <mat-icon class="theme-text">lock</mat-icon>
+          <input
+            formControlName="confirmPassword"
+            [type]="hideConfirmPassword ? 'password' : 'text'"
+            class="w-full py-3 px-3 bg-gray-100 border-none focus:outline-none"
+            placeholder="Confirm Password"
+          >
+          <button
+            type="button"
+            (click)="hideConfirmPassword = !hideConfirmPassword"
+            class="text-gray-400 focus:outline-none"
+          >
+            <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Sign up button -->
+      <button
+        type="submit"
+        class="w-full py-3 px-4 theme-bg hover:bg-theme-700 text-white font-medium rounded-lg transition duration-200"
+        [disabled]="isLoading"
+      >
+        <div *ngIf="isLoading" class="flex justify-center items-center">
+          <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+          Creating Account...
+        </div>
+        <span *ngIf="!isLoading">SIGN UP</span>
+      </button>
+      
+      <!-- Login link -->
+      <div class="text-center mt-6">
+        <span class="text-gray-600 text-sm">Already have an account? </span>
+        <a [routerLink]="['/login']" class="theme-text text-sm">Login</a>
+      </div>
+    </form>
+  </div>
+</app-auth-layout>

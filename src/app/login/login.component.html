@@ -1,0 +1,69 @@
+<app-auth-layout title="Welcome Back!" description="Sign in to access your dashboard and manage your account.">
+  <div leftContent>
+    <h3 class="text-2xl font-bold theme-text mb-1">Hello!</h3>
+    <p class="text-theme-600 mb-8">Sign in to your account</p>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Email input -->
+      <div class="relative">
+        <div class="flex items-center bg-gray-100 rounded-lg px-3">
+          <mat-icon class="theme-text">perm_identity</mat-icon>
+          <input
+            formControlName="username"
+            type="username"
+            class="w-full py-3 px-3 bg-gray-100 border-none focus:outline-none"
+            placeholder="User-Name"
+          >
+        </div>
+      </div>
+      
+      <!-- Password input -->
+      <div class="relative">
+        <div class="flex items-center bg-gray-100 rounded-lg px-3">
+          <mat-icon class="theme-text">lock</mat-icon>
+          <input
+            formControlName="password"
+            [type]="hidePassword ? 'password' : 'text'"
+            class="w-full py-3 px-3 bg-gray-100 border-none focus:outline-none"
+            placeholder="Password"
+          >
+          <button
+            type="button"
+            (click)="hidePassword = !hidePassword"
+            class="text-gray-400 focus:outline-none"
+          >
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Remember me and Forgot password -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <input type="checkbox" id="remember" class="mr-2 accent-theme-600">
+          <label for="remember" class="text-sm text-gray-500">Remember me</label>
+        </div>
+        <a [routerLink]="['/forgot-password']" class="text-sm theme-text">Forgot password?</a>
+      </div>
+      
+      <!-- Sign in button -->
+      <button
+        type="submit"
+        class="w-full py-3 px-4 theme-bg hover:bg-theme-700 text-white font-medium rounded-lg transition duration-200"
+        [disabled]="isLoading"
+      >
+        <div *ngIf="isLoading" class="flex justify-center items-center">
+          <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+          Signing In...
+        </div>
+        <span *ngIf="!isLoading">SIGN IN</span>
+      </button>
+      
+      <!-- Create account link -->
+      <div class="text-center mt-6">
+        <span class="text-gray-600 text-sm">Don't have an account? </span>
+        <a [routerLink]="['/signup']" class="theme-text text-sm">Create</a>
+      </div>
+    </form>
+  </div>
+</app-auth-layout>

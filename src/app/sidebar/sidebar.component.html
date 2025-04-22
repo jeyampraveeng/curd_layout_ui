@@ -1,0 +1,36 @@
+<div class="h-full bg-theme-700 flex flex-col" [ngClass]="{'w-60': isOpen, 'w-16': !isOpen}">
+  <!-- Toggle button -->
+  <div class="relative flex justify-end items-center h-10 cursor-pointer hover:bg-theme-600 transition-colors"
+  [ngClass]="{ 'absolute right-0': isOpen === true, 'left-1/2 transform -translate-x-1/2': isOpen === false }"
+  (click)="toggleSidebarState()">
+<mat-icon class="text-theme-300 hover:text-white">
+ {{ isOpen ? 'chevron_right' : 'chevron_left' }}
+</mat-icon>
+</div>
+
+  
+  <!-- Navigation items -->
+  <mat-nav-list class="flex-1 p-0">
+    <div *ngFor="let item of navItems" class="mb-1">
+      <a mat-list-item routerLinkActive="active-link" [routerLink]="item.route"
+         [matTooltip]="!isOpen ? item.name : ''" 
+         matTooltipPosition="right"
+         class="h-12 text-theme-300 hover:bg-theme-600 hover:text-white transition-colors">
+        <mat-icon class="mr-4 text-theme-400">{{ item.icon }}</mat-icon>
+        <span class="whitespace-nowrap transition-opacity duration-300 text-white" *ngIf="isOpen">{{ item.name }}</span>
+      </a>
+    </div>
+  </mat-nav-list>
+  
+  <!-- Logout section -->
+  <div class="mt-auto border-t border-opacity-10 border-white">
+    <a mat-list-item 
+       (click)="logout()" 
+       [matTooltip]="!isOpen ? 'Logout' : ''" 
+       matTooltipPosition="right"
+       class="text-theme-300 hover:bg-theme-600 hover:text-white transition-colors">
+      <mat-icon class="mr-4 text-theme-400">exit_to_app</mat-icon>
+      <span class="whitespace-nowrap transition-opacity duration-300 text-white" *ngIf="isOpen">Logout</span>
+    </a>
+  </div>
+</div>

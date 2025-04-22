@@ -1,0 +1,114 @@
+<div class="settings-page">
+  <mat-card class="settings-card">
+    <mat-card-header>
+      <mat-card-title>Settings</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <!-- Theme Section -->
+      <div class="settings-section">
+        <h3>Appearance</h3>
+        
+        <div class="theme-swatches">
+          <div *ngFor="let theme of themes"
+               class="theme-swatch"
+               [style.background-color]="getThemeColor(theme)"
+               [style.color]="getThemeTextColor(getThemeColor(theme))"
+               [class.selected]="selectedTheme === theme"
+               (click)="changeTheme(theme)"
+               [attr.title]="getThemeName(theme)">
+            <mat-icon *ngIf="selectedTheme === theme" class="check-icon">check</mat-icon>
+            <span class="theme-name">{{ getThemeName(theme) }}</span>
+          </div>
+          
+          <!-- Add Custom Theme Button -->
+          <div class="theme-swatch add-theme"
+               (click)="openThemeEditor()"
+               title="Create Custom Theme">
+            <mat-icon>add</mat-icon>
+          </div>
+        </div>
+        
+        <div class="setting-row">
+          <span class="setting-label">Dark Mode</span>
+          <mat-slide-toggle
+            [checked]="darkModeEnabled"
+            (change)="toggleDarkMode()"
+            color="primary">
+            {{ darkModeEnabled ? 'Enabled' : 'Disabled' }}
+          </mat-slide-toggle>
+        </div>
+        
+        <div class="setting-row">
+          <span class="setting-label">Compact View</span>
+          <mat-slide-toggle
+            [checked]="compactViewEnabled"
+            (change)="toggleCompactView()"
+            color="primary">
+            {{ compactViewEnabled ? 'Enabled' : 'Disabled' }}
+          </mat-slide-toggle>
+        </div>
+        
+        <div class="setting-row">
+          <span class="setting-label">Font Size</span>
+          <div class="setting-control">
+            <input type="range" 
+                  min="12" 
+                  max="20" 
+                  step="1" 
+                  [value]="fontSize" 
+                  (input)="updateFontSize($event)">
+            <span>{{ fontSize }}px</span>
+          </div>
+        </div>
+      </div>
+      
+      <mat-divider></mat-divider>
+      
+      <!-- Preferences Section -->
+      <div class="settings-section">
+        <h3>Preferences</h3>
+        
+        <div class="setting-row">
+          <span class="setting-label">Notifications</span>
+          <mat-slide-toggle
+            [checked]="notificationsEnabled"
+            (change)="toggleNotifications()"
+            color="primary">
+            {{ notificationsEnabled ? 'Enabled' : 'Disabled' }}
+          </mat-slide-toggle>
+        </div>
+        
+        <div class="setting-row">
+          <span class="setting-label">Auto Save</span>
+          <mat-slide-toggle
+            [checked]="autoSaveEnabled"
+            (change)="toggleAutoSave()"
+            color="primary">
+            {{ autoSaveEnabled ? 'Enabled' : 'Disabled' }}
+          </mat-slide-toggle>
+        </div>
+        
+        <div class="setting-row">
+          <span class="setting-label">Language</span>
+          <mat-form-field appearance="outline" class="language-select">
+            <mat-select [(value)]="language" (selectionChange)="changeLanguage($event)">
+              <mat-option *ngFor="let lang of languages" [value]="lang.code">
+                {{ lang.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      
+      <mat-divider></mat-divider>
+      
+      <!-- Actions Section -->
+      <div class="settings-section actions-section">
+        <button mat-raised-button color="warn" (click)="resetAllSettings()">
+          Reset All Settings
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
